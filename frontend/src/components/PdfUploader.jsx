@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import PdfTextExtractor from './PdfTextExtractor.jsx';
+import PdfDownloader from './PdfDownloader.jsx';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -31,22 +32,21 @@ function PdfUploader() {
   };
 
   return (
-    <div>
+    <div id="resume-container">
       <input type="file" accept="application/pdf" onChange={onFileChange} />
       <button onClick={uploadFile}>Upload</button>
 
       {file && (
         <>
-          <Document
-            file={file}
-            onLoadSuccess={onDocumentLoadSuccess}
-          >
+          <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
             {Array.from(new Array(numPages), (el, index) => (
               <Page key={index} pageNumber={index + 1} />
             ))}
           </Document>
 
           <PdfTextExtractor file={file} />
+
+          <PdfDownloader elementId="resume-container" />
         </>
       )}
     </div>
