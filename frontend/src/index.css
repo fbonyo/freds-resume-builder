@@ -1,6 +1,104 @@
-body {
-  font-family: Arial, sans-serif;
+/* Base styles */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #e0f2fe, #fef3c7);
+  color: #1f2937;
   padding: 20px;
-  background: #f9f9f9;
+}
+
+/* Cards */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Headers */
+h1, h2, h3 {
+  color: #1e40af;
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+button {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* File input */
+input[type="file"] {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* Extracted text box */
+.text-box {
+  background-color: #fefefe;
+  border: 1px solid #e5e7eb;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* PDF container for smooth scrolling */
+.pdf-container {
+  max-height: 500px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+/* PDF pages hover effect */
+.react-pdf__Page {
+  margin: 10px 0;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.react-pdf__Page:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Drag-and-drop highlight */
+.drag-over {
+  border: 2px dashed #2563eb !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+  }
 }

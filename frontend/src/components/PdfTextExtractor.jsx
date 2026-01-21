@@ -3,7 +3,7 @@ import { pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-function PdfTextExtractor({ file }) {
+function PdfTextExtractor({ file, keywords = [] }) {
   const [text, setText] = useState('');
 
   useEffect(() => {
@@ -20,16 +20,24 @@ function PdfTextExtractor({ file }) {
         const pageText = content.items.map(item => item.str).join(' ');
         fullText += pageText + '\n\n';
       }
-      setText(fullText);
+
+      // Highlight keywords
+      let highlighted = fullText;
+      keywords.forEach(kw => {
+        const re = new RegExp(kw, 'gi');
+        highlighted = highlighted.replace(re, match => `<mark>${match}</mark>`);
+      });
+
+      setText(highlighted);
     };
     reader.readAsArrayBuffer(file);
-  }, [file]);
+  }, [file, keywords]);
 
   return (
-    <div style={{ whiteSpace: 'pre-wrap', marginTop: '20px', background: '#fff', padding: '10px', border: '1px solid #ccc' }}>
-      <h3>Extracted Text:</h3>
-      {text || 'No text extracted yet.'}
-    </div>
+    <div
+      className="text-box"
+      dangerouslySetInnerHTML={{ __html: text || 'No text extracted yet.' }}
+    />
   );
 }
 

@@ -6,18 +6,15 @@ import PdfDownloader from './PdfDownloader.jsx';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function PdfUploader() {
-  const [file, setFile] = useState(null);
-  const [numPages, setNumPages] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
 
   const onFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFiles = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
+    setFiles(prev => [...prev, ...selectedFiles]);
   };
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
-  };
-
-  const uploadFile = async () => {
+  const uploadFile = async (file) => {
     if (!file) return;
     const formData = new FormData();
     formData.append('resume', file);
@@ -31,24 +28,36 @@ function PdfUploader() {
     alert('File uploaded: ' + data.fileName);
   };
 
-  return (
-    <div id="resume-container">
-      <input type="file" accept="application/pdf" onChange={onFileChange} />
-      <button onClick={uploadFile}>Upload</button>
+  const onDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const droppedFiles = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+    setFiles(prev => [...prev, ...droppedFiles]);
+  };
 
-      {file && (
-        <>
-          <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-            {Array.from(new Array(numPages), (el, index) => (
+  return (
+    <div
+      className={dragOver ? "card drag-over" : "card"}
+      id="resume-container"
+      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={onDrop}
+    >
+      <h2>Fred's Resume Builder</h2>
+      <input type="file" multiple accept="application/pdf" onChange={onFileChange} />
+      {files.map((file, idx) => (
+        <div key={idx} className="card pdf-container">
+          <h3>{file.name}</h3>
+          <button onClick={() => uploadFile(file)}>Upload</button>
+          <Document file={file}>
+            {Array.from(new Array(file.numPages || 1), (el, index) => (
               <Page key={index} pageNumber={index + 1} />
             ))}
           </Document>
-
           <PdfTextExtractor file={file} />
-
-          <PdfDownloader elementId="resume-container" />
-        </>
-      )}
+        </div>
+      ))}
+      <PdfDownloader elementId="resume-container" />
     </div>
   );
 }
